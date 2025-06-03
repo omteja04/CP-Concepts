@@ -17,13 +17,11 @@ using Matrix = vector<vector<T>>;
 using ll = long long;
 const int MOD = 1e9 + 7;
 
-class MatrixExponentiation {
-private:
+struct MatrixExpo {
     int n;
     int mod;
 
-public:
-    MatrixExponentiation(int size, int m = MOD):
+    MatrixExpo(int size, int m = MOD):
         n(size), mod(m) {}
 
     Matrix<ll> multiply(const Matrix<ll> &a, const Matrix<ll> &b) {
@@ -68,7 +66,7 @@ void solve() {
     }
 
     Matrix<ll> T = {{1, 1}, {1, 0}};
-    MatrixExponentiation matrixExpo(2);
+    MatrixExpo matrixExpo(2);
     Matrix<ll> res = matrixExpo.power(T, n - 1);
     cout << res[0][0];  // Fibonacci(n)
 }
