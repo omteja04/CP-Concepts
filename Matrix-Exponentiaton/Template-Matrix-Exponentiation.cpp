@@ -1,55 +1,76 @@
+/**
+ * Author: omteja04
+ * Created on: 03-06-2025 20:52:12
+ * Template: Matrix-Exponentiation
+ **/
+
 #include <bits/stdc++.h>
-#include <vector>
 using namespace std;
+
+#define fast_cin()                    \
+    ios_base::sync_with_stdio(false); \
+    cin.tie(nullptr);                 \
+    cout.tie(nullptr)
+
+template <typename T>
+using Matrix = vector<vector<T>>;
 using ll = long long;
 const int MOD = 1e9 + 7;
-#define fast_cin()                         \
-    std::ios_base::sync_with_stdio(false); \
-    std::cin.tie(NULL);                    \
-    std::cout.tie(NULL)
 
-using Matrix = vector<vector<ll>>;
-Matrix operator*(Matrix &a, Matrix &b) {
-    ll n = a.size();
-    Matrix res(n, vector<ll>(n));
-    for(int i = 0; i < n; i++) {
-        for(int j = 0; j < n; j++) {
-            for(int k = 0; k < n; k++) {
-                res[i][j] = (res[i][j] + a[i][k] * b[k][j]) % MOD;
+class MatrixExponentiation {
+private:
+    int n;
+    int mod;
+
+public:
+    MatrixExponentiation(int size, int m = MOD):
+        n(size), mod(m) {}
+
+    Matrix<ll> multiply(const Matrix<ll> &a, const Matrix<ll> &b) {
+        Matrix<ll> res(n, vector<ll>(n, 0));
+        for(int i = 0; i < n; ++i) {
+            for(int j = 0; j < n; ++j) {
+                for(int k = 0; k < n; ++k) {
+                    res[i][j] = (res[i][j] + a[i][k] * b[k][j]) % mod;
+                }
             }
         }
+        return res;
     }
-    return res;
-}
 
-Matrix generateIdentity(ll n) {
-    Matrix I(n, vector<long long>(n, 0));
-    for(int i = 0; i < n; ++i) {
-        I[i][i] = 1;
-    }
-    return I;
-}
-Matrix power(Matrix &base, ll exp) {
-    Matrix res = generateIdentity(base.size());
-    while(exp) {
-        if(exp & 1) {
-            res = res * base;
+    Matrix<ll> identity() {
+        Matrix<ll> I(n, vector<ll>(n, 0));
+        for(int i = 0; i < n; ++i) {
+            I[i][i] = 1;
         }
-        base = base * base;
-        exp >>= 1;
+        return I;
     }
-    return res;
-}
-void levi() {
-    Matrix T = {{1, 1}, {1, 0}};
+
+    Matrix<ll> power(Matrix<ll> base, ll exp) {
+        Matrix<ll> res = identity();
+        while(exp) {
+            if(exp & 1) {
+                res = multiply(res, base);
+            }
+            base = multiply(base, base);
+            exp >>= 1;
+        }
+        return res;
+    }
+};
+
+void solve() {
     ll n;
     cin >> n;
     if(n == 0) {
         cout << 0;
         return;
     }
-    Matrix res = power(T, n - 1);
-    cout << res[0][0];
+
+    Matrix<ll> T = {{1, 1}, {1, 0}};
+    MatrixExponentiation matrixExpo(2);
+    Matrix<ll> res = matrixExpo.power(T, n - 1);
+    cout << res[0][0];  // Fibonacci(n)
 }
 
 int main() {
@@ -57,7 +78,7 @@ int main() {
     int tc = 1;
     // cin >> tc;
     while(tc--) {
-        levi();
+        solve();
         cout << '\n';
     }
     return 0;
