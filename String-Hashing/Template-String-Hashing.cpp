@@ -1,12 +1,9 @@
 /**
  * Author: omteja04
- * Created on: 04-06-2025 10:24:28
- * Problem: StringHashing
- * Link: https://cses.fi/problemset/task/1753/
+ * Created on: 03-06-2025 21:16:29
+ * Template: String Hashing
  **/
 #include <bits/stdc++.h>
-#include <iostream>
-#include <vector>
 using namespace std;
 
 #define fast_cin()                    \
@@ -117,33 +114,37 @@ struct Hashing {
     }
 };
 
-vector<ll> stringMatching(string &text, string &pattern) {
-    int n = text.size();
-    int m = pattern.size();
-    if(m > n) {
-        return {};
-    }
-    Hashing textHash(text);
-    Hashing patternHash(pattern);
-    vector<ll> occurrences;
-    vector<ll> patterHashVal = patternHash.fullHash();
-    for(int i = 1; i + m - 1 <= n; i++) {
-        vector<ll> subHash = textHash.getHash(i, i + m - 1);
-        if(subHash == patterHashVal) {
-            occurrences.push_back(i);
-        }
-    }
-    return occurrences;
-}
 void levi() {
     precompute_hash_helpers();
-    string text, pattern;
-    cin >> text >> pattern;
-    cout << stringMatching(text, pattern).size();
+
+    string str = "aqaq";
+    Hashing h(str);
+
+    // Store distinct substrings by their hash vectors
+    set<vector<ll>> distinct_substrings;
+    int n = str.size();
+
+    for(int i = 1; i <= n; i++) {
+        for(int j = i; j <= n; j++) {
+            distinct_substrings.insert(h.getHash(i, j));
+        }
+    }
+
+    cout << "Number of distinct substrings: " << distinct_substrings.size() << '\n';
+    vector<ll> res = h.fullHash();
+    for(auto &it: res) {
+        cout << it << " ";
+    }
+    // cout << '\n';
 }
 
 int main() {
     fast_cin();
-    levi();
+    int tc = 1;
+    // cin >> tc;
+    while(tc--) {
+        levi();
+        cout << "\n";
+    }
     return 0;
 }
