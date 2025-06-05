@@ -1,4 +1,12 @@
+/**
+ * Author: omteja04
+ * Created on: 04-06-2025 13:53:27
+ * Problem: FindingBorders
+ * Link: https://cses.fi/problemset/task/1732
+ **/
+
 #include <bits/stdc++.h>
+#include <vector>
 using namespace std;
 
 #define fast_cin()                    \
@@ -109,37 +117,21 @@ struct Hashing {
     }
 };
 
-void levi() {
-
-    string str = "aqaq";
-    Hashing h(str);
-
-    // Store distinct substrings by their hash vectors
-    set<vector<ll>> distinct_substrings;
+int main() {
+    precompute_hash_helpers();
+    string str;
+    cin >> str;
+    Hashing H(str);
     int n = str.size();
-
-    for(int i = 1; i <= n; i++) {
-        for(int j = i; j <= n; j++) {
-            distinct_substrings.insert(h.getHash(i, j));
+    vector<ll> res;
+    for(int i = 1; i < n; i++) {
+        vector<ll> hashVal = H.getHash(1, i);
+        vector<ll> suffixHashVal = H.getHash(n - i + 1, n);
+        if(hashVal == suffixHashVal) {
+            res.push_back(i);
         }
     }
-
-    cout << "Number of distinct substrings: " << distinct_substrings.size() << '\n';
-    vector<ll> res = h.fullHash();
     for(auto &it: res) {
         cout << it << " ";
     }
-    // cout << '\n';
-}
-
-int main() {
-    fast_cin();
-    precompute_hash_helpers();
-    int tc = 1;
-    // cin >> tc;
-    while(tc--) {
-        levi();
-        cout << "\n";
-    }
-    return 0;
 }

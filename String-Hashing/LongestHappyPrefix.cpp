@@ -1,7 +1,8 @@
 /**
  * Author: omteja04
- * Created on: 03-06-2025 21:34:20
- * Problem: Single-Hash
+ * Created on: 04-06-2025 13:53:27
+ * Problem: LongestHappyPrefix
+ * Link: https://leetcode.com/problems/longest-happy-prefix/
  **/
 
 #include <bits/stdc++.h>
@@ -70,30 +71,33 @@ struct SingleHash {
     }
 
     ll getHash(int l, int r) {
-        //  ll hashValue = prefixHash[r + 1] - (prefixHash[l] * power[r - l + 1]) % MOD;
+        //  ll hashValue = prefixHash[r + 1] - (prefixHash[l] * power[r - l +1]) % MOD;
         ll hashValue = modSub(prefixHash[r], modMul(prefixHash[l - 1], power[r - l + 1], MOD), MOD);
         return hashValue;
     }
 };
 
-void levi() {
-    string text = "abdabcbabc";
-    SingleHash hash(text);
-    // 1-Based
-    cout << "Hash of entire string: " << hash.getHash(1, (int) text.size()) << "\n";
-    cout << "Hash of substring 'abc' at index 8..10: " << hash.getHash(8, 10) << "\n";
-    cout << "Hash of substring 'dab' at index 3..5: " << hash.getHash(3, 5) << "\n";
+string longestPrefix(string s) {
+    SingleHash H(s);
+    int n = s.size();
+    string res;
+    for(int i = n - 1; i >= 1; i--) {
+        ll hashVal = H.getHash(1, i);
+        ll suffixHashVal = H.getHash(n - i + 1, n);
+        if(hashVal == suffixHashVal) {
+            return s.substr(0, i);
+        }
+    }
+    return "";
+}
 
-    return;
+void levi() {
+    string str;
+    cin >> str;
+    string res = longestPrefix(str);
+    cout << res;
 }
 
 int main() {
-    fast_cin();
-    int tc = 1;
-    // cin >> tc;
-    while(tc--) {
-        levi();
-        cout << '\n';
-    }
-    return 0;
+    levi();
 }

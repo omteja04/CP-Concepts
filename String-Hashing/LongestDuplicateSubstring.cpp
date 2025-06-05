@@ -1,10 +1,15 @@
 /**
  * Author: omteja04
- * Created on: 03-06-2025 21:34:20
- * Problem: Single-Hash
+ * Created on: 05-06-2025 15:56:13
+ * Problem: LongestDuplicateSubstring
+ * Link: https://leetcode.com/problems/longest-duplicate-substring/description/?envType=problem-list-v2&envId=rolling-hash
+ * Link: https://cses.fi/problemset/task/2106/
  **/
 
 #include <bits/stdc++.h>
+#include <string>
+#include <unordered_map>
+#include <vector>
 using namespace std;
 
 #define fast_cin()                    \
@@ -74,26 +79,53 @@ struct SingleHash {
         ll hashValue = modSub(prefixHash[r], modMul(prefixHash[l - 1], power[r - l + 1], MOD), MOD);
         return hashValue;
     }
+    ll fullHash() {
+        return getHash(1, n);
+    }
 };
 
-void levi() {
-    string text = "abdabcbabc";
-    SingleHash hash(text);
-    // 1-Based
-    cout << "Hash of entire string: " << hash.getHash(1, (int) text.size()) << "\n";
-    cout << "Hash of substring 'abc' at index 8..10: " << hash.getHash(8, 10) << "\n";
-    cout << "Hash of substring 'dab' at index 3..5: " << hash.getHash(3, 5) << "\n";
+string longestDupSubstring(string &s) {
+    int n = s.size();
+    SingleHash hash(s);
+    int left = 1;
+    int right = n - 1;
+    string ans = "";
 
-    return;
+    auto can = [&](int mid) -> string {
+        unordered_map<ll, vector<ll>> mp;
+        for(int i = 0; i + mid <= n; i++) {
+            ll h = hash.getHash(i + 1, i + mid);
+
+            for(int startIdx: mp[h]) {
+                if(s.substr(startIdx, mid) == s.substr(i, mid)) {
+                    return s.substr(startIdx, mid);
+                }
+            }
+            mp[h].push_back(i);
+        }
+        return "";
+    };
+    while(left <= right) {
+        int mid = left + (right - left) / 2;
+        string dup = can(mid);
+        if(dup.size() > ans.size()) {
+            ans = dup;
+            left = mid + 1;
+        } else {
+            right = mid - 1;
+        }
+    }
+    return ans;
 }
 
 int main() {
     fast_cin();
-    int tc = 1;
-    // cin >> tc;
-    while(tc--) {
-        levi();
-        cout << '\n';
+    string str;
+    cin >> str;
+    string res = longestDupSubstring(str);
+    if(res.empty()) {
+        cout << -1;
+        return 0;
     }
-    return 0;
+    cout << res;
 }

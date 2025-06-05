@@ -1,4 +1,13 @@
+/**
+ * Author: omteja04
+ * Created on: 04-06-2025 11:24:36
+ * Problem: Ada_and_Spring_Cleaning
+ * Link: https://www.spoj.com/problems/ADACLEAN/
+ **/
+
 #include <bits/stdc++.h>
+#include <iostream>
+#include <vector>
 using namespace std;
 
 #define fast_cin()                    \
@@ -6,15 +15,15 @@ using namespace std;
     cin.tie(nullptr);                 \
     cout.tie(nullptr)
 
-using ll = long long;
+using ll = unsigned long long;
 
 const int MAX = 1e6 + 5;
 
 // MOD values for hashing (large primes)
-vector<ll> MOD = {127657753, 987654319};
+vector<ll> MOD = {(ll) 1e9 + 7, (ll) 1e9 + 9};
 
 // BASE values for hashing (randomly chosen)
-vector<ll> BASE = {137, 277};
+vector<ll> BASE = {31, 53};
 
 const int HASH_COUNT = MOD.size();
 
@@ -109,34 +118,32 @@ struct Hashing {
     }
 };
 
+ll findUnique(string &text, int len) {
+    int n = text.size();
+    if(len > n) {
+        return {};
+    }
+    Hashing textHash(text);
+    set<vector<ll>> uniq;
+    for(int i = 1; i + len - 1 <= n; i++) {
+        vector<ll> subHash = textHash.getHash(i, i + len - 1);
+        uniq.insert(subHash);
+    }
+    return uniq.size();
+}
 void levi() {
-
-    string str = "aqaq";
-    Hashing h(str);
-
-    // Store distinct substrings by their hash vectors
-    set<vector<ll>> distinct_substrings;
-    int n = str.size();
-
-    for(int i = 1; i <= n; i++) {
-        for(int j = i; j <= n; j++) {
-            distinct_substrings.insert(h.getHash(i, j));
-        }
-    }
-
-    cout << "Number of distinct substrings: " << distinct_substrings.size() << '\n';
-    vector<ll> res = h.fullHash();
-    for(auto &it: res) {
-        cout << it << " ";
-    }
-    // cout << '\n';
+    int n, k;
+    cin >> n >> k;
+    string text;
+    cin >> text;
+    cout << findUnique(text, k);
 }
 
 int main() {
-    fast_cin();
     precompute_hash_helpers();
-    int tc = 1;
-    // cin >> tc;
+    fast_cin();
+    int tc;
+    cin >> tc;
     while(tc--) {
         levi();
         cout << "\n";

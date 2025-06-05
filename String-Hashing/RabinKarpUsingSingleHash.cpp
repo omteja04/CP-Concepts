@@ -1,7 +1,8 @@
+
 /**
  * Author: omteja04
  * Created on: 03-06-2025 21:34:20
- * Problem: Single-Hash
+ * Problem: String Matching Using Single Hash
  **/
 
 #include <bits/stdc++.h>
@@ -74,16 +75,32 @@ struct SingleHash {
         ll hashValue = modSub(prefixHash[r], modMul(prefixHash[l - 1], power[r - l + 1], MOD), MOD);
         return hashValue;
     }
+    ll fullHash() {
+        return getHash(1, n);
+    }
 };
+ll countMatches(string &text, string &pattern) {
+    int n = text.size();
+    int m = pattern.size();
+    if(m > n) {
+        return -1;
+    }
+    ll cnt = 0;
+    SingleHash textHash(text);
+    SingleHash patternHash(pattern);
+    ll patterHashVal = patternHash.fullHash();
+    for(int i = 1; i + m - 1 <= n; i++) {
+        ll subHash = textHash.getHash(i, i + m - 1);
+        if(subHash == patterHashVal) {
+            if(text.substr(i - 1, m) == pattern) {
+                cnt++;
+            }
+        }
+    }
+    return cnt;
+}
 
 void levi() {
-    string text = "abdabcbabc";
-    SingleHash hash(text);
-    // 1-Based
-    cout << "Hash of entire string: " << hash.getHash(1, (int) text.size()) << "\n";
-    cout << "Hash of substring 'abc' at index 8..10: " << hash.getHash(8, 10) << "\n";
-    cout << "Hash of substring 'dab' at index 3..5: " << hash.getHash(3, 5) << "\n";
-
     return;
 }
 
